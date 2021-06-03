@@ -150,9 +150,7 @@
       const menuItems = ref<MenuBarItemModel[]>(
         props.items.map((item) =>
           Object.assign({}, item, {
-            id: Math.random()
-              .toString(16)
-              .slice(2),
+            id: Math.random().toString(16).slice(2),
           }),
         ),
       );
@@ -256,10 +254,8 @@
         const dragEndResult = utils.handleDragEnd(event, unref(clientCoords));
 
         if (dragEndResult) {
-          const {
-            dragActive: dragActiveNew,
-            dockPosition: positionNew,
-          } = dragEndResult;
+          const { dragActive: dragActiveNew, dockPosition: positionNew } =
+            dragEndResult;
 
           dragActive.value = dragActiveNew;
           dockPosition.value = positionNew;

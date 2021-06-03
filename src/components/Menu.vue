@@ -209,9 +209,7 @@
       const menuItems = ref(
         props.items.map((item) =>
           Object.assign({}, item, {
-            id: Math.random()
-              .toString(16)
-              .slice(2),
+            id: Math.random().toString(16).slice(2),
             showSubMenu: false,
           }),
         ),

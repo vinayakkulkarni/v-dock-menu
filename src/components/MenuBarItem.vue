@@ -177,10 +177,8 @@
           bottom?: string;
         } = {};
 
-        const {
-          clientHeight,
-          clientWidth,
-        } = menuBarItemRef.value as HTMLDivElement;
+        const { clientHeight, clientWidth } =
+          menuBarItemRef.value as HTMLDivElement;
 
         if (props.dock === DockPosition.LEFT) {
           newStyle.top = '0px';
