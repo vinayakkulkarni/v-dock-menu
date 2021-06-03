@@ -1,3 +1,3 @@
-import DockMenu from "./components/MenuBar.vue";
+import DockMenu from './components/MenuBar.vue';
 
 export { DockMenu };

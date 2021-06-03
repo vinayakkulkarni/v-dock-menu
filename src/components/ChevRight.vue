@@ -15,11 +15,10 @@
   </svg>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script lang="ts">
+  import { defineComponent } from '@vue/composition-api';
 
-export default defineComponent({
-  name: "ChevRightIcon"
-})
+  export default defineComponent({
+    name: 'ChevRightIcon',
+  });
 </script>
-  

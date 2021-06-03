@@ -34,7 +34,7 @@
   "exclude": [
     "node_modules",
     "dist",
-    "rollup.config.js"
+    "build"
   ],
   "include": [
     "src"

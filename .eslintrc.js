@@ -1,13 +1,27 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
-    es2021: true,
+    es6: true,
+    node: true,
   },
-  extends: ["plugin:vue/vue3-recommended"],
   parserOptions: {
-    ecmaVersion: 12,
-    parser: "@typescript-eslint/parser",
-    sourceType: "module",
+    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    lib: ['es2020'],
+    extraFileExtensions: ['.vue'],
   },
-  rules: {},
+  // required to lint *.vue files
+  plugins: ['vue', 'prettier'],
+  extends: [
+    'plugin:vue/recommended',
+    'plugin:prettier/recommended',
+    'prettier',
+  ],
+  // add your custom rules here
+  rules: {
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  },
 };

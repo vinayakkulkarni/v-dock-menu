@@ -1,29 +1,31 @@
-import { MenuBarItemModel } from "@/models/MenuBarItemModel";
+import { MenuBarItemModel } from '@/models/MenuBarItemModel';
 
-type tResult = {
-  navigateMenu: {
-    items: MenuBarItemModel[];
-  }
-} | {
-  navigateMenubar: {
-    nextId: string;
-  }
-};
+type tResult =
+  | {
+      navigateMenu: {
+        items: MenuBarItemModel[];
+      };
+    }
+  | {
+      navigateMenubar: {
+        nextId: string;
+      };
+    };
 
 let handleNav: (
   id: string,
-  dir: "prev" | "next",
+  dir: 'prev' | 'next',
   items: MenuBarItemModel[],
   activeSelection: number,
-  activeMenuBarId: string
+  activeMenuBarId: string,
 ) => tResult;
 
 handleNav = (id, dir, items, activeSelection, activeMenuBarId) => {
   const eleIndex = items.findIndex((item) => item.id === id);
-  const newIdx = dir === "next" ? eleIndex + 1 : eleIndex - 1;
+  const newIdx = dir === 'next' ? eleIndex + 1 : eleIndex - 1;
   const menuItemsLen = items.length;
 
-  let nextId = "";
+  let nextId = '';
 
   if (newIdx > -1 && newIdx < menuItemsLen) {
     nextId = items[newIdx].id as string;
@@ -37,13 +39,11 @@ handleNav = (id, dir, items, activeSelection, activeMenuBarId) => {
   const menuBarItem = items.find((item) => item.id === id);
 
   const menuItem =
-    menuBarItem && menuBarItem.menu
-      ? menuBarItem.menu[activeSelection]
-      : null;
+    menuBarItem && menuBarItem.menu ? menuBarItem.menu[activeSelection] : null;
 
   let result: tResult;
 
-  if (menuItem?.menu && dir === "next") {
+  if (menuItem?.menu && dir === 'next') {
     result = {
       navigateMenu: {
         items: items.map((item) => {
@@ -53,26 +53,25 @@ handleNav = (id, dir, items, activeSelection, activeMenuBarId) => {
                 Object.assign({}, it, {
                   showSubMenu:
                     it.name?.toLowerCase() === menuItem.name?.toLowerCase(),
-                })
+                }),
               ),
             });
           } else {
             return item;
           }
-        })
-      }
+        }),
+      },
     };
   } else {
     // move to the next menu bar item
     return {
       navigateMenubar: {
-        nextId
-      }
-    }
+        nextId,
+      },
+    };
   }
 
   return result;
-}
+};
 
 export { handleNav };
-

@@ -1,15 +1,22 @@
 import MenuBarDockPosition from '../models/MenuBarDockPosition';
 
 interface Coordinates {
-  x: number; y: number;
+  x: number;
+  y: number;
 }
 
-let handleDragEnd: (event: DragEvent | TouchEvent, clientCoordinates: Coordinates) => ({
-  dragActive: boolean,
-  dockPosition: MenuBarDockPosition
-}) | null;
+let handleDragEnd: (
+  event: DragEvent | TouchEvent,
+  clientCoordinates: Coordinates,
+) => {
+  dragActive: boolean;
+  dockPosition: MenuBarDockPosition;
+} | null;
 
-handleDragEnd = (event: DragEvent | TouchEvent, clientCoordinates: Coordinates) => {
+handleDragEnd = (
+  event: DragEvent | TouchEvent,
+  clientCoordinates: Coordinates,
+) => {
   const winHeight = window.innerHeight;
   const winWidth = window.innerWidth;
   let xThreshold = 0;
@@ -18,8 +25,8 @@ handleDragEnd = (event: DragEvent | TouchEvent, clientCoordinates: Coordinates) 
 
   let value = {
     dragActive: false,
-    dockPosition: MenuBarDockPosition.NOT_AVAILABLE
-  }
+    dockPosition: MenuBarDockPosition.NOT_AVAILABLE,
+  };
 
   if (event instanceof DragEvent) {
     xThreshold = Math.round((x / winWidth) * 100);
@@ -33,8 +40,8 @@ handleDragEnd = (event: DragEvent | TouchEvent, clientCoordinates: Coordinates) 
     }
   }
 
-  console.log(yThreshold)
-  console.log(xThreshold)
+  console.log(yThreshold);
+  console.log(xThreshold);
 
   if (xThreshold < 10) {
     value.dockPosition = MenuBarDockPosition.LEFT;
@@ -59,9 +66,7 @@ handleDragEnd = (event: DragEvent | TouchEvent, clientCoordinates: Coordinates) 
   } else {
     return null;
   }
-
-}
-
+};
 
 let handleDragStart: (event: DragEvent | TouchEvent) => void;
 
@@ -79,4 +84,3 @@ handleDragStart = (event: DragEvent | TouchEvent) => {
 };
 
 export default { handleDragEnd, handleDragStart };
-
