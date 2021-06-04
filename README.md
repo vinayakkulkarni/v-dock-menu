@@ -2,14 +2,12 @@
 
   ![logo](./readme-assets/social-logo-small.png)
 
-  [![Build Status](https://dev.azure.com/prabhummurthy/vue-dock-menu/_apis/build/status/prabhuignoto.vue-dock-menu?branchName=master)](https://dev.azure.com/prabhummurthy/vue-dock-menu/_build/latest?definitionId=8&branchName=master)
-  [![DeepScan grade](https://deepscan.io/api/teams/10074/projects/13372/branches/223016/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10074&pid=13372&bid=223016)
-  [![DeepSource](https://deepsource.io/gh/prabhuignoto/vue-dock-menu.svg/?label=active+issues)](https://deepsource.io/gh/prabhuignoto/vue-dock-menu/?ref=repository-badge)
-  [![Codacy Badge](https://app.codacy.com/project/badge/Grade/65c2863c31644d5a98ae5bb83c1bd104)](https://www.codacy.com/manual/prabhuignoto/vue-dock-menu/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=prabhuignoto/vue-dock-menu&amp;utm_campaign=Badge_Grade)
-  [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/prabhuignoto/vue-dock-menu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/prabhuignoto/vue-dock-menu/context:javascript)
-  [![Depfu](https://badges.depfu.com/badges/f3a16c4fe1fcbd36df15d6949d9846bc/overview.svg)](https://depfu.com/github/prabhuignoto/vue-dock-menu?project_id=16495)
-  [![Known Vulnerabilities](https://snyk.io/test/github/prabhuignoto/vue-dock-menu/badge.svg?targetFile=package.json)](https://snyk.io/test/github/prabhuignoto/vue-dock-menu?targetFile=package.json)
-  ![https://badgen.net/bundlephobia/minzip/vue-dock-menu](https://badgen.net/bundlephobia/minzip/vue-dock-menu)
+  [![ci](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml/badge.svg)](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml)
+  [![DeepScan grade](https://deepscan.io/api/teams/9055/projects/17446/branches/399662/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=9055&pid=17446&bid=399662)
+  [![DeepSource](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu.svg/?label=active+issues)](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu/?ref=repository-badge)
+  [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/vinayakkulkarni/v-dock-menu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vinayakkulkarni/v-dock-menu/context:javascript)
+  [![Known Vulnerabilities](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu/badge.svg?targetFile=package.json)](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu?targetFile=package.json)
+  ![https://badgen.net/bundlephobia/minzip/v-dock-menu](https://badgen.net/bundlephobia/minzip/v-dock-menu)
 
   ![demo](./readme-assets/demo.gif)
 
@@ -21,13 +19,13 @@
 - 🤏 &nbsp;Dock the Menubar by dragging and dropping to the edges of the screen.
 - 👆 &nbsp;Touch support.
 - 👍 &nbsp;Support for nested menus up to any levels.
-- 👓&nbsp; The Menus adjust to any docked position and enables an intuitive menu navigation.
-- ⌨&nbsp; Keyboard Accessible.
-- 🎨&nbsp; Icon support.
-- ⚡&nbsp; Zero dependencies.
-- 💪&nbsp; Built with [Typescript](https://www.typescriptlang.org/).
-- 🧰&nbsp; Intuitive [API](#props) with data driven behavior.
-- 🌠&nbsp; Built with the all new [Vue 3](https://v3.vuejs.org/).
+- 👓 &nbsp; The Menus adjust to any docked position and enables an intuitive menu navigation.
+- ⌨ &nbsp; Keyboard Accessible.
+- 🎨 &nbsp; Icon support.
+- ⚡ &nbsp; Zero dependencies.
+- 💪 &nbsp; Built with [TypeScript](https://www.typescriptlang.org/).
+- 🧰 &nbsp; Intuitive [API](#props) with data driven behavior.
+- 🌠 &nbsp; Built with the all new [Composition API](https://github.com/vuejs/composition-api) for [Vue 2](https://vuejs.org/v2/guide/)
   
 <h2>Table of Contents</h2>
 
@@ -43,30 +41,30 @@
 - [📦 Build Setup](#-build-setup)
 - [🔨 Contributing](#-contributing)
 - [🧱 Built with](#-built-with)
-- [📄 Notes](#-notes)
+- [📜 Notes](#-notes)
 - [Meta](#meta)
 
 ## ⚡ Installation
 
 ```sh
-yarn install vue-dock-menu
+npm install v-dock-menu
 ```
 
 ## 🚀 Getting Started
 
-`vue-dock-menu` has some great defaults. Please check the [prop](#Props) section for all available options.
+`v-dock-menu` has some great defaults. Please check the [prop](#Props) section for all available options.
 
 The following snippet creates a simple Menubar and docks it to the `top` of the page.
 
 ```sh
 <template>
-  <vue-dock-menu :items="items">
-  </vue-dock-menu>
+  <v-dock-menu :items="items">
+  </v-dock-menu>
 </template>
 
 <script>
-import { DockMenu } from "vue-dock-menu";
-import "vue-dock-menu/dist/vue-dock-menu.css";
+import { DockMenu } from "v-dock-menu";
+import "v-dock-menu/dist/v-dock-menu.css";
 
 export default {
   name: "example",
@@ -101,7 +99,7 @@ export default {
 | on-selected | Callback that will be called on a menu item selection                                             |         |
 | items       | Data for the Menu bar                                                                             | []      |
 | theme       | prop to customize the color theme                                                                 |         |
-| draggable   | enables/disbales dragging on the menubar.                                                         | True    |
+| draggable   | enables/disbales dragging on the menubar.                                                         | false    |
 
 ### ⚓ Dock
 
@@ -110,10 +108,10 @@ use the `dock` prop to dock the menubar to your preferred position. The prop can
 Here we dock the Menu bar to the right side of the screen.
 
 ```sh
-<vue-dock-menu>
+<v-dock-menu>
   :items="items"
   dock="RIGHT"
-</vue-dock-menu>
+</v-dock-menu>
 ```
 
 ### 📡 on-selected
@@ -169,10 +167,10 @@ const items = [
 ```
 
 ```sh
-  <vue-dock-menu>
+  <v-dock-menu>
     :items="items"
     dock="BOTTOM"
-  </vue-dock-menu>
+  </v-dock-menu>
 ```
 
 ### 🎨 Custom color scheme
@@ -267,28 +265,28 @@ export default defineComponent({
 
 ## What's coming next
 
-- support for react.
-- accordion style rendering on sidebar mode.
+- Ability to position individual Menu Items
+- Refactor using tailwind v2.x and remove all custom-css
 
 ## 📦 Build Setup
 
 ``` bash
 # install dependencies
-yarn install
+npm install
 
 # start dev
-yarn run dev
+npm run dev
 
 # package lib
 npm run rollup
 
 # run css linting
-yarn run lint:css
+npm run lint:css
 ```
 
 ## 🔨 Contributing
 
-1. Fork it ( [https://github.com/prabhuignoto/vue-dock-menu/fork](https://github.com/prabhuignoto/vue-dock-menu/fork) )
+1. Fork it ( [https://github.com/vinayakkulkarni/v-dock-menu/fork](https://github.com/vinayakkulkarni/v-dock-menu/fork) )
 2. Create your feature branch (`git checkout -b new-feature`)
 3. Commit your changes (`git commit -am 'Add feature'`)
 4. Push to the branch (`git push origin new-feature`)
@@ -296,22 +294,16 @@ yarn run lint:css
 
 ## 🧱 Built with
 
-- [Typescript](typescript).
+- [TypeScript](https://www.typescriptlang.org/).
 
-## 📄 Notes
+## 📜 Notes
 
-- The project uses [vite](vite) instead of @vue/cli. I choose vite for speed and i also believe [vite](vite) will be the future.
-
+This is a fork of the original [vue-dock-menu](https://github.com/prabhuignoto/vue-dock-menu) by [prabhuignoto](https://github.com/prabhuignoto) which supports Vue 2.
 ## Meta
-
-Prabhu Murthy – [@prabhumurthy2](https://twitter.com/prabhumurthy2) – prabhu.m.murthy@gmail.com
-
-[https://www.prabhumurthy.com](https://www.prabhumurthy.com)
 
 Distributed under the MIT license. See `LICENSE` for more information.
 
-[https://github.com/prabhuingoto/](https://github.com/prabhuignoto/)
+[https://github.com/vinayakkulkarni/](https://github.com/vinayakkulkarni/)
 
 [vue]: https://vuejs.org
 [typescript]: https://typescriptlang.org
-[vite]: https://github.com/vitejs/vite
