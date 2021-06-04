@@ -106,6 +106,7 @@
   import ChevRight from './ChevRight.vue';
   import { SelectedItemModel } from '@/models/SelectedItemModel';
   import { MenuTheme } from '@/models/Theme';
+  import MenuVue from './Menu.vue';
 
   export default defineComponent({
     name: 'Menu',
@@ -154,7 +155,7 @@
     },
     emits: ['selected', 'close-menu'],
     setup(props, { emit }) {
-      const MenuComponent = import('./Menu.vue');
+      const MenuComponent = MenuVue;
 
       const showSubMenu = ref();
 
