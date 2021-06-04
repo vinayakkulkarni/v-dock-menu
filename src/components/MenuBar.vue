@@ -97,7 +97,7 @@
       draggable: {
         required: false,
         type: Boolean,
-        default: true,
+        default: false,
       },
       sidebarWidth: {
         required: false,
