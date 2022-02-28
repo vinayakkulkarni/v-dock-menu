@@ -16,7 +16,7 @@ jobs:
           ref: main
 
       - name: Setup node env 📦
-        uses: actions/setup-node@v2.5.1
+        uses: actions/setup-node@v3
 
       - name: Cache node_modules ⚡️
         uses: actions/cache@v2.1.7
