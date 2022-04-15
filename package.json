@@ -34,7 +34,7 @@
     "release": "shipjs prepare"
   },
   "dependencies": {
-    "@vue/composition-api": "^1.4.4",
+    "@vue/composition-api": "^1.4.5",
     "focus-visible": "^5.2.0"
   },
   "devDependencies": {
