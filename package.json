@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@vue/composition-api": "^1.4.4",
-    "focus-visible": "^5.2.0"
+    "focus-visible": "^5.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
