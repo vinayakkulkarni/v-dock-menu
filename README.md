@@ -1,32 +1,33 @@
 <div align="center">
 
-  ![logo](./readme-assets/social-logo-small.png)
+![logo](./readme-assets/social-logo-small.png)
 
-  [![ci](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml/badge.svg)](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml)
-  [![DeepScan grade](https://deepscan.io/api/teams/9055/projects/17446/branches/399662/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=9055&pid=17446&bid=399662)
-  [![DeepSource](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu.svg/?label=active+issues)](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu/?ref=repository-badge)
-  [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/vinayakkulkarni/v-dock-menu.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/vinayakkulkarni/v-dock-menu/context:javascript)
-  [![Known Vulnerabilities](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu/badge.svg?targetFile=package.json)](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu?targetFile=package.json)
-  ![https://badgen.net/bundlephobia/minzip/v-dock-menu](https://badgen.net/bundlephobia/minzip/v-dock-menu)
+[![ci](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml/badge.svg)](https://github.com/vinayakkulkarni/v-dock-menu/actions/workflows/ci.yml)
+[![DeepScan grade](https://deepscan.io/api/teams/9055/projects/17446/branches/399662/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=9055&pid=17446&bid=399662)
+[![DeepSource](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu.svg/?label=active+issues)](https://deepsource.io/gh/vinayakkulkarni/v-dock-menu/?ref=repository-badge)
+[![Known Vulnerabilities](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu/badge.svg?targetFile=package.json)](https://snyk.io/test/github/vinayakkulkarni/v-dock-menu?targetFile=package.json)
+![https://badgen.net/bundlephobia/minzip/v-dock-menu](https://badgen.net/bundlephobia/minzip/v-dock-menu)
 
-  ![demo](./readme-assets/demo.gif)
+![demo](./readme-assets/demo.gif)
 
 </div>
 
+<p>
+  <a href="https://v-dock-menu.vinayakkulkarni.dev"><strong>Live demo →</strong></a>
+</p>
+
 <h2>Features</h2>
 
-- ⚓ &nbsp;Dock your menu with ease.
-- 🤏 &nbsp;Dock the Menubar by dragging and dropping to the edges of the screen.
+- ⚓ &nbsp;Dock your menu bar to the top, bottom, left or right edge.
+- 🤏 &nbsp;Drag and drop the bar to any edge of the screen.
 - 👆 &nbsp;Touch support.
-- 👍 &nbsp;Support for nested menus up to any levels.
-- 👓 &nbsp; The Menus adjust to any docked position and enables an intuitive menu navigation.
-- ⌨ &nbsp; Keyboard Accessible.
-- 🎨 &nbsp; Icon support.
-- ⚡ &nbsp; Zero dependencies.
-- 💪 &nbsp; Built with [TypeScript](https://www.typescriptlang.org/).
-- 🧰 &nbsp; Intuitive [API](#props) with data driven behavior.
-- 🌠 &nbsp; Built with the all new [Composition API](https://github.com/vuejs/composition-api) for [Vue 2](https://vuejs.org/v2/guide/)
-  
+- 👍 &nbsp;Nested menus to any depth.
+- 👓 &nbsp;Menus adjust to the docked position.
+- ⌨ &nbsp;Keyboard accessible, with ARIA `menubar` / `menu` roles.
+- 🎨 &nbsp;Icon support through slots, and a themeable colour scheme.
+- ⚡ &nbsp;Zero runtime dependencies.
+- 💪 &nbsp;Built with [TypeScript](https://www.typescriptlang.org/) and Vue 3 `<script setup>`.
+
 <h2>Table of Contents</h2>
 
 - [⚡ Installation](#-installation)
@@ -37,251 +38,165 @@
   - [⚡ Populating Menu](#-populating-menu)
   - [🎨 Custom color scheme](#-custom-color-scheme)
   - [🎭 Icon support](#-icon-support)
-- [What's coming next](#whats-coming-next)
 - [📦 Build Setup](#-build-setup)
 - [🔨 Contributing](#-contributing)
-- [🧱 Built with](#-built-with)
 - [📜 Notes](#-notes)
 - [Meta](#meta)
 
 ## ⚡ Installation
 
 ```sh
-npm install v-dock-menu
+pnpm add v-dock-menu
 ```
 
 ## 🚀 Getting Started
 
-`v-dock-menu` has some great defaults. Please check the [prop](#Props) section for all available options.
+The following snippet creates a menu bar and docks it to the top of the page.
 
-The following snippet creates a simple Menubar and docks it to the `top` of the page.
+```vue
+<script setup lang="ts">
+  import { DockMenu, type SelectedItemModel } from 'v-dock-menu';
+  import 'v-dock-menu/dist/index.css';
 
-```sh
-<template>
-  <v-dock-menu :items="items">
-  </v-dock-menu>
-</template>
+  const items = [
+    {
+      name: 'File',
+      menu: [{ name: 'Open' }, { name: 'New Window' }, { name: 'Exit' }],
+    },
+    {
+      name: 'Edit',
+      menu: [{ name: 'Cut' }, { name: 'Copy' }, { name: 'Paste' }],
+    },
+  ];
 
-<script>
-import { DockMenu } from "v-dock-menu";
-import "v-dock-menu/dist/v-dock-menu.css";
-
-export default {
-  name: "example",
-  components: {
-    DockMenu
-  },
-  data() {
-    return {
-      items = [
-        {
-          name: "File",
-          menu: [{ name: "Open"}, {name: "New Window"}, {name: "Exit"}]
-        },
-        {
-          name: "Edit",
-          menu: [{ name: "Cut"}, {name: "Copy"}, {name: "Paste"}]
-        }
-      ]
-    }
-  }
-}
+  const onSelected = ({ name, path }: SelectedItemModel) =>
+    console.log(name, path);
 </script>
+
+<template>
+  <DockMenu :items="items" :on-selected="onSelected" />
+</template>
+```
+
+You can also register it globally:
+
+```ts
+import { createApp } from 'vue';
+import DockMenuPlugin from 'v-dock-menu';
+import 'v-dock-menu/dist/index.css';
+
+createApp(App).use(DockMenuPlugin).mount('#app');
 ```
 
 ![sample1](./readme-assets/sample1.png)
 
 ## Props
 
-| Name        | Description                                                                                       | Default |
-|-------------|---------------------------------------------------------------------------------------------------|---------|
-| dock        | default docking position. Can be any one of `TOP`, `LEFT`, `RIGHT`, `BOTTOM` | `TOP`              |         |
-| on-selected | Callback that will be called on a menu item selection                                             |         |
-| items       | Data for the Menu bar                                                                             | []      |
-| theme       | prop to customize the color theme                                                                 |         |
-| draggable   | enables/disbales dragging on the menubar.                                                         | false    |
+| Name          | Description                                                                   | Default |
+| ------------- | ----------------------------------------------------------------------------- | ------- |
+| items         | Data for the menu bar                                                         | —       |
+| dock          | Docking position: `TOP`, `LEFT`, `RIGHT` or `BOTTOM`. Supports `v-model:dock` | `TOP`   |
+| on-selected   | Callback called on a menu item selection                                      | —       |
+| draggable     | Enables dragging the menu bar to an edge                                      | `false` |
+| theme         | Colour scheme (see below)                                                     | dark    |
+| sidebar-width | Width of the expanded sidebar when docked left or right                       | `200px` |
+
+The component also emits `selected` (same payload as `on-selected`) and `update:dock` when the bar is dragged to a new edge.
 
 ### ⚓ Dock
 
-use the `dock` prop to dock the menubar to your preferred position. The prop can accept the following values `TOP`, `BOTTOM`, `LEFT`, `RIGHT`.
+Use the `dock` prop to pick an edge. Bind it with `v-model:dock` to keep it in sync when users drag the bar.
 
-Here we dock the Menu bar to the right side of the screen.
-
-```sh
-<v-dock-menu>
-  :items="items"
-  dock="RIGHT"
-</v-dock-menu>
+```vue
+<DockMenu v-model:dock="dock" :items="items" draggable />
 ```
 
 ### 📡 on-selected
 
-The `on-selected` prop is used to retrieve the selected menu item. The callback receives an object with `name` and a `path` property.
+The `on-selected` callback receives an object with a `name` and a `path`.
 
 - **name** - Name of the selected menu item.
 - **path** - Full path of the selected menu item.
 
-if you select the `Copy` menu item under the `Edit` menu, below would be the payload received on the `on-selected` callback.
+Selecting `Copy` under the `Edit` menu gives:
 
-```sh
-{
-  name: "Copy",
-  path: "edit>copy"
-}
+```js
+{ name: 'Copy', path: 'edit>copy' }
 ```
 
 ### ⚡ Populating Menu
 
-Use the `items` prop to create Simple or Nested menus of your liking.
+Use the `items` prop to create simple or nested menus.
 
-Here we create a simple Menu structure with 3 Menu items with `Edit` and `Open Recent` having sub menus.
+- To include a divider, add an item with just `isDivider: true`.
+- To disable an item, set `disable: true`.
+- To nest a menu, give an item its own `menu` array.
 
-- To include a divider, set an empty item object with just a `isDivider` property set to `true`.
-- To disable an item, set `disable` to `true`.
-
-```sh
+```ts
 const items = [
-  { name: "New" },
-  { isDivider: true },
   {
-    name: "Edit",
-    menu: {
-      name: "edit-items",
-      disable:  true
-    },
+    name: 'File',
+    menu: [
+      { name: 'New' },
+      { isDivider: true },
+      {
+        name: 'Open Recent',
+        menu: [{ name: 'Roadmap' }, { name: 'Changelog' }],
+      },
+      { isDivider: true },
+      { name: 'Save', disable: true },
+      { name: 'Exit' },
+    ],
   },
-  { isDivider: true },
-  {
-    name: "Open Recent",
-    menu: {
-      name: "recent-items",
-    },
-  },
-  { isDivider: true },
-  { name: "Save", disable: true },
-  { name: "Save As..." },
-  { isDivider: true },
-  { name: "Close" },
-  { name: "Exit" },
-]
-```
-
-```sh
-  <v-dock-menu>
-    :items="items"
-    dock="BOTTOM"
-  </v-dock-menu>
+];
 ```
 
 ### 🎨 Custom color scheme
 
-use the `theme` prop to customize the colors of the menu bar.
+Use the `theme` prop to customise the colours. Any CSS colour works, including `var(--token)`.
 
-```sh
-  <menu-bar
-    :items="items"
-    :on-selected="selected"
-    :theme="{
-      primary: '#001B48',
-      secondary: '#02457a',
-      tertiary: '#018abe',
-      textColor: '#fff'
-    }"
-  />
+```vue
+<DockMenu
+  :items="items"
+  :theme="{
+    primary: '#001B48',
+    secondary: '#02457a',
+    tertiary: '#018abe',
+    textColor: '#fff',
+  }"
+/>
 ```
 
 ![theme](./readme-assets/theme.png)
 
 ### 🎭 Icon support
 
-Each menu item can be iconified and the component uses slots to inject the icons.
+Each menu item can take an icon through a slot. Set `iconSlot` on the item and pass a template with the same slot name. This works at every nesting level.
 
-Pass individual icons (or images) as templates marked with a unique `slot id`. please make sure the `ids` match the  `iconSlot` property in the items array.
-
-```sh
-<menu-bar
-  :items="items"
-  :on-selected="selected"
+```vue
+<DockMenu
+  :items="[{ name: 'File', menu: [{ name: 'New File', iconSlot: 'file' }] }]"
 >
   <template #file>
-    <img
-      src="../assets/file.svg"
-      alt="file"
-      :style="style"
-    >
+    <img src="./file.svg" alt="" width="14" height="14" />
   </template>
-  <template #window>
-    <img
-      src="../assets/window-maximize.svg"
-      alt="file"
-      :style="style"
-    >
-  </template>
-</menu-bar>
-
-export default defineComponent({
-  name: "MenuExample",
-  data()  {
-    return {
-      items: [
-        { name: "New File", iconSlot: "file" },
-        { name: "New Window", iconSlot: "window" },
-      ]
-    }
-  }
-})
+</DockMenu>
 ```
 
 ![menu-icon](./readme-assets/menu-icon.png)
 
-This works seamlessly even for `nested` menu structure. Make sure the `slot ids` match and the component will render the icons appropriately.
-
-```sh
-<menu-bar
-  :items="items"
-  :on-selected="selected"
->
-  <template #window>
-    <img
-      src="../assets/window-maximize.svg"
-      alt="file"
-      :style="style"
-    >
-  </template>
-</menu-bar>
-
-export default defineComponent({
-  name: "MenuExample",
-  data()  {
-    return {
-      items: [
-        { name: "New File",
-        subMenu: [{ name: "New Window", iconSlot: "window" }]},
-      ]
-    }
-  }
-});
-```
-
-## What's coming next
-
-- Ability to position individual Menu Items
-- Refactor using tailwind v2.x and remove all custom-css
-
 ## 📦 Build Setup
 
-``` bash
-# install dependencies
-npm install
+Requires Node 26 and pnpm.
 
-# start dev
-npm run dev
-
-# package lib
-npm run rollup
-
-# run css linting
-npm run lint:css
+```bash
+pnpm install         # install dependencies
+pnpm run build       # package the library (vp pack)
+pnpm run test        # unit tests (vp test)
+pnpm run lint        # vp lint
+pnpm run typecheck   # vue-tsc for the library and the demo
+pnpm run demo:dev    # run the Nuxt demo locally
+pnpm run deploy      # deploy the demo to Cloudflare Workers
 ```
 
 ## 🔨 Contributing
@@ -292,13 +207,10 @@ npm run lint:css
 4. Push to the branch (`git push origin new-feature`)
 5. Create a new Pull Request
 
-## 🧱 Built with
-
-- [TypeScript](https://www.typescriptlang.org/).
-
 ## 📜 Notes
 
-This is a fork of the original [vue-dock-menu](https://github.com/prabhuignoto/vue-dock-menu) by [prabhuignoto](https://github.com/prabhuignoto) which supports Vue 2.
+This is a fork of the original [vue-dock-menu](https://github.com/prabhuignoto/vue-dock-menu) by [prabhuignoto](https://github.com/prabhuignoto) which supports Vue 2. This version targets Vue 3.
+
 ## Meta
 
 Distributed under the MIT license. See `LICENSE` for more information.
