@@ -4,49 +4,57 @@ on:
   push:
     branches:
       - main
-      - next
   pull_request:
     branches:
       - main
-      - next
+
+permissions:
+  contents: read
 
 jobs:
   ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [15, 16]
-
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@v3.1.0
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          node-version: 26
 
-      - name: Setup node env 📦
-        uses: actions/setup-node@v3.1.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v6
         with:
-          node-version: ${{ matrix.node }}
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-store-
 
-      - name: Upgrade npm 🎉
-        run: npm install -g npm@latest
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Get npm cache directory 🏗
-        id: npm-cache
-        run: echo "::set-output name=dir::$(npm config get cache)"
+      - name: Lint
+        run: pnpm run lint
 
-      - name: Restore cached node_modules 🤷‍♂️
-        uses: actions/cache@v3.3.1
-        with:
-          path: ${{ steps.npm-cache.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name: Check formatting
+        run: pnpm run format:check
 
-      - name: Install dependencies 🚀
-        run: npm ci --prefer-offline --no-audit --no-optional
+      - name: Typecheck
+        run: pnpm run typecheck
 
-      - name: Check for lint errors 👀
-        run: npm run lint
+      - name: Test
+        run: pnpm run test
+
+      - name: Build the package
+        run: pnpm run build
+
+      - name: Build the demo
+        run: pnpm run demo:build

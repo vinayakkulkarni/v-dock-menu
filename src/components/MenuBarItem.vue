@@ -3,339 +3,296 @@
     ref="menuBarItemRef"
     :class="[...menuBarStyle, 'menu-bar-item-container']"
     :style="{ background: bgColor }"
+    role="menuitem"
+    :aria-haspopup="menu ? 'menu' : undefined"
+    :aria-expanded="menuActive && showMenu"
     tabindex="0"
     @mouseenter="setMenuViewable(true)"
     @mouseleave="setMenuViewable(false)"
+    @click="handleClick"
+    @touchend="handleTouchEnd"
     @keyup="handleKeyUp"
   >
     <span
       :class="[...menuBarStyle, 'name-container']"
       :style="{ color: theme.textColor }"
     >
-      {{ getName }}
+      {{ displayName }}
     </span>
     <span class="menu-container" :style="menuStyle">
-      <transition name="fade">
-        <Menu
-          v-if="menuActive && showMenu"
+      <Transition name="fade">
+        <MenuList
+          v-if="menu && menuActive && showMenu"
           :items="menu"
           :dock="dock"
           :parent="name"
           :theme="theme"
-          :is-touch="isMobileDevice"
+          :is-mobile="isMobileDevice"
           :on-selected="onSelected"
           :initial-highlight-index="highlightIndex"
         >
           <template v-for="slot in Object.keys($slots)" #[slot]="scope">
             <slot :name="slot" v-bind="scope" />
           </template>
-        </Menu>
-      </transition>
+        </MenuList>
+      </Transition>
     </span>
   </div>
 </template>
 
-<script lang="ts">
-  import DockPosition from '../models/MenuBarDockPosition';
-  import { MenuItemModel } from '@/models/MenuItemModel';
+<script setup lang="ts">
   import {
-    defineComponent,
-    PropType,
-    ref,
     computed,
-    watch,
-    onMounted,
     nextTick,
-    unref,
-    onUnmounted,
-  } from '@vue/composition-api';
-  import Menu from './Menu.vue';
-  import { MenuTheme } from '@/models/Theme';
-  import isMobileDevice from './isMobileDevice';
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    useTemplateRef,
+    watch,
+  } from 'vue';
+  import MenuList from './MenuList.vue';
+  import {
+    DockPosition,
+    type MenuItemModel,
+    type MenuTheme,
+    type OnSelected,
+  } from '../types';
 
-  export default defineComponent({
-    name: 'MenuBarItem',
-    components: {
-      Menu,
+  defineOptions({ name: 'DockMenuBarItem' });
+
+  const props = withDefaults(
+    defineProps<{
+      id: string;
+      name: string;
+      theme: MenuTheme;
+      onSelected: OnSelected;
+      menu?: MenuItemModel[];
+      dock?: DockPosition;
+      menuActive?: boolean;
+      menuBarActive?: boolean;
+      showMenu?: boolean;
+      isMobileDevice?: boolean;
+      activeMenuSelectionIndex?: number;
+      highlightFirstElement?: boolean;
+    }>(),
+    {
+      menu: undefined,
+      dock: DockPosition.TOP,
+      menuActive: false,
+      menuBarActive: false,
+      showMenu: false,
+      isMobileDevice: false,
+      activeMenuSelectionIndex: -1,
+      highlightFirstElement: false,
     },
-    props: {
-      name: {
-        type: String,
-        default: '',
-        required: true,
-      },
-      menu: {
-        type: Array as PropType<MenuItemModel[]>,
-        required: true,
-      },
-      menuActive: {
-        type: Boolean,
-        default: false,
-        required: true,
-      },
-      menuBarActive: {
-        type: Boolean,
-        default: false,
-        required: true,
-      },
-      showMenu: {
-        type: Boolean,
-        default: false,
-        required: true,
-      },
-      menuBarDimensions: {
-        type: Object as PropType<{ height: number; width: number }>,
-        required: true,
-        default: () => {},
-      },
-      dock: {
-        required: true,
-        default: DockPosition.TOP,
-        type: String,
-      },
-      id: {
-        required: true,
-        type: String,
-      },
-      theme: {
-        required: true,
-        type: Object as PropType<MenuTheme>,
-      },
-      isMobileDevice: {
-        type: Boolean,
-        default: false,
-      },
-      activeMenuSelectionIndex: {
-        type: Number,
-        default: -1,
-      },
-      onSelected: {
-        required: true,
-        type: Function as PropType<
-          ({ name, path }: { name: string; path: string }) => void
-        >,
-      },
-      highlightFirstElement: {
-        type: Boolean,
-        required: false,
-        default: false,
-      },
+  );
+
+  const emit = defineEmits<{
+    show: [state: boolean, id?: string];
+    activate: [id: string];
+    deactivate: [id: string];
+    'activate-next': [id: string, dir: 'next'];
+    'activate-previous': [id: string, dir: 'prev'];
+    'highlight-menu-item': [dir: 'up' | 'down', id: string];
+    'select-highlighted-menu-item': [];
+  }>();
+
+  const menuBarItemRef = useTemplateRef<HTMLDivElement>('menuBarItemRef');
+  const menuBarItemActive = ref(false);
+  const menuOpen = ref(false);
+  const highlightIndex = ref(-1);
+  const menuStyle = ref<Record<string, string>>({});
+
+  const isSidebar = computed(
+    () => props.dock === DockPosition.LEFT || props.dock === DockPosition.RIGHT,
+  );
+
+  const displayName = computed(() =>
+    isSidebar.value && !props.menuBarActive ? props.name[0] : props.name,
+  );
+
+  const menuBarStyle = computed(() => [
+    props.dock.toLowerCase(),
+    menuBarItemActive.value ? 'active' : '',
+    props.menuBarActive ? 'expanded' : '',
+  ]);
+
+  const bgColor = computed(() =>
+    menuBarItemActive.value ? props.theme.secondary : 'transparent',
+  );
+
+  const setMenuViewable = (viewable: boolean) => {
+    if (viewable) {
+      emit('activate', props.id);
+    } else {
+      emit('deactivate', props.id);
+    }
+  };
+
+  const toggleMenu = (event: Event) => {
+    event.stopPropagation();
+    menuOpen.value = !menuOpen.value;
+    emit('show', menuOpen.value, props.id);
+  };
+
+  const handleClick = (event: MouseEvent) => {
+    if (!props.isMobileDevice) {
+      toggleMenu(event);
+    }
+  };
+
+  const handleTouchEnd = (event: TouchEvent) => {
+    if (props.isMobileDevice) {
+      setMenuViewable(true);
+      nextTick(() => toggleMenu(event));
+    }
+  };
+
+  const computeMenuStyle = () => {
+    const element = menuBarItemRef.value;
+    if (!element) {
+      return;
+    }
+    const { clientHeight, clientWidth } = element;
+    const positions: Record<DockPosition, Record<string, string>> = {
+      LEFT: { top: '0px', left: `${clientWidth}px` },
+      RIGHT: { top: '0px', right: `${clientWidth}px` },
+      TOP: { top: `${clientHeight}px`, left: '0px' },
+      BOTTOM: { bottom: `${clientHeight}px`, left: '0px' },
+    };
+    menuStyle.value = positions[props.dock];
+  };
+
+  let styleTimer: ReturnType<typeof setTimeout> | undefined;
+
+  watch(
+    () => props.showMenu,
+    (value) => {
+      menuBarItemActive.value = value;
+      if (value) {
+        menuOpen.value = false;
+        nextTick(() => menuBarItemRef.value?.focus());
+      }
     },
-    emits: [
-      'show',
-      'deactivate',
-      'activate',
-      'selected',
-      'activate-next',
-      'activate-previous',
-      'highlight-menu-item',
-      'select-highlighted-menu-item',
-    ],
-    setup(props, { emit }) {
-      const menuBarItemRef = ref<HTMLDivElement>();
-      const menuBarItemActive = ref(false);
-      const menuStyle = ref();
-      const isMobile = ref(isMobileDevice());
-      const menuOpen = ref(false);
+  );
 
-      const getName = computed(() => {
-        if (
-          props.dock === DockPosition.LEFT ||
-          props.dock === DockPosition.RIGHT
-        ) {
-          return !props.menuBarActive ? props.name[0] : props.name;
-        } else {
-          return props.name;
-        }
-      });
-
-      // activate menu
-      const setMenuViewable = (viewable: boolean) => {
-        if (viewable) {
-          emit('activate', props.id);
-        } else {
-          emit('deactivate', props.id);
-        }
-      };
-
-      // toggle menu
-      const toggleMenu = (event: MouseEvent | TouchEvent) => {
-        event.stopPropagation();
-        menuOpen.value = !menuOpen.value;
-        emit('show', menuOpen.value, props.id);
-      };
-
-      const handleMenuSelection = ($event: any) => props.onSelected($event);
-
-      const highlightIndex = ref(-1);
-
-      const computeMenuStyle = () => {
-        const newStyle: {
-          top?: string;
-          left?: string;
-          right?: string;
-          bottom?: string;
-        } = {};
-
-        const { clientHeight, clientWidth } =
-          menuBarItemRef.value as HTMLDivElement;
-
-        if (props.dock === DockPosition.LEFT) {
-          newStyle.top = '0px';
-          newStyle.left = `${clientWidth}px`;
-        } else if (props.dock === DockPosition.RIGHT) {
-          newStyle.top = '0px';
-          newStyle.right = `${clientWidth}px`;
-        } else if (props.dock === DockPosition.TOP) {
-          newStyle.top = `${clientHeight}px`;
-          newStyle.left = '0px';
-        } else if (props.dock === DockPosition.BOTTOM) {
-          newStyle.bottom = `${clientHeight}px`;
-          newStyle.left = '0px';
-        }
-
-        menuStyle.value = newStyle;
-      };
-
-      const menuBarStyle = computed(() => {
-        return [
-          props.dock.toLowerCase(),
-          menuBarItemActive.value ? 'active' : '',
-          props.menuBarActive ? 'expanded' : '',
-        ];
-      });
-
-      watch(
-        () => props.showMenu,
-        (newValue) => {
-          menuBarItemActive.value = newValue;
-          if (newValue) {
-            menuOpen.value = false;
-            nextTick(() => menuBarItemRef.value?.focus());
-          }
-        },
-      );
-
-      watch(
-        () => [props.dock, props.menuBarActive],
-        () => {
-          nextTick(() => {
-            setTimeout(() => {
-              computeMenuStyle();
-            }, 150);
-          });
-        },
-      );
-
-      watch(
-        () => props.highlightFirstElement,
-        (value) => {
-          if (value) {
-            highlightIndex.value = 0;
-          } else {
-            highlightIndex.value = -1;
-          }
-        },
-      );
-
-      onMounted(() => {
-        computeMenuStyle();
-        const menuBarItem = unref(menuBarItemRef);
-        const mobile = unref(isMobile);
-
-        if (!menuBarItem) {
-          return;
-        }
-
-        if (mobile) {
-          menuBarItem.addEventListener('touchend', (ev) => {
-            setMenuViewable();
-            nextTick(() => {
-              toggleMenu(ev);
-            });
-          });
-        } else {
-          menuBarItem.addEventListener('click', toggleMenu);
-        }
-      });
-
-      onUnmounted(() => {
-        const menuBarItem = unref(menuBarItemRef);
-        const mobile = unref(isMobile);
-
-        if (!menuBarItem) {
-          return;
-        }
-
-        if (mobile) {
-          menuBarItem.removeEventListener('touchstart', toggleMenu);
-        } else {
-          menuBarItem.removeEventListener('mousedown', toggleMenu);
-        }
-      });
-
-      const bgColor = computed(() => {
-        if (menuBarItemActive.value) {
-          return props.theme.secondary;
-        } else {
-          return 'transparent';
-        }
-      });
-
-      const keyNavType = computed(() => {
-        if (props.dock === 'TOP' || props.dock === 'BOTTOM') {
-          return 'horizontal';
-        } else {
-          return 'vertical';
-        }
-      });
-
-      const handleKeyUp = (event: KeyboardEvent) => {
-        const { key } = event;
-        const navType = unref(keyNavType);
-
-        if (key === 'Tab') {
-          emit('activate', props.id);
-        } else if (key === 'Enter') {
-          if (props.activeMenuSelectionIndex < 0) {
-            emit('show', !props.menuActive, props.id);
-          } else {
-            emit('select-highlighted-menu-item');
-          }
-        } else if (key === 'Escape') {
-          emit('show', false);
-        } else if (
-          (key === 'ArrowRight' && navType === 'horizontal') ||
-          (key === 'ArrowDown' && navType === 'vertical')
-        ) {
-          emit('activate-next', props.id, 'next');
-        } else if (
-          (key === 'ArrowLeft' && navType === 'horizontal') ||
-          (key === 'ArrowUp' && navType === 'vertical')
-        ) {
-          emit('activate-previous', props.id, 'prev');
-        } else if (key === 'ArrowDown' && navType === 'horizontal') {
-          emit('highlight-menu-item', 'down', props.id);
-        } else if (key === 'ArrowUp' && navType === 'horizontal') {
-          emit('highlight-menu-item', 'up', props.id);
-        }
-      };
-
-      return {
-        getName,
-        menuBarItemRef,
-        menuBarStyle,
-        menuStyle,
-        setMenuViewable,
-        toggleMenu,
-        handleMenuSelection,
-        computeMenuStyle,
-        bgColor,
-        handleKeyUp,
-        highlightIndex,
-      };
+  // wait for the expand/collapse animation before measuring
+  watch(
+    () => [props.dock, props.menuBarActive],
+    () => {
+      clearTimeout(styleTimer);
+      styleTimer = setTimeout(computeMenuStyle, 150);
     },
-  });
+  );
+
+  watch(
+    () => props.highlightFirstElement,
+    (value) => {
+      highlightIndex.value = value ? 0 : -1;
+    },
+  );
+
+  const keyNavType = computed(() =>
+    isSidebar.value ? 'vertical' : 'horizontal',
+  );
+
+  const handleKeyUp = (event: KeyboardEvent) => {
+    const { key } = event;
+    const horizontal = keyNavType.value === 'horizontal';
+
+    if (key === 'Tab') {
+      emit('activate', props.id);
+    } else if (key === 'Enter') {
+      if (props.activeMenuSelectionIndex < 0) {
+        emit('show', !props.menuActive, props.id);
+      } else {
+        emit('select-highlighted-menu-item');
+      }
+    } else if (key === 'Escape') {
+      emit('show', false);
+    } else if (
+      (key === 'ArrowRight' && horizontal) ||
+      (key === 'ArrowDown' && !horizontal)
+    ) {
+      emit('activate-next', props.id, 'next');
+    } else if (
+      (key === 'ArrowLeft' && horizontal) ||
+      (key === 'ArrowUp' && !horizontal)
+    ) {
+      emit('activate-previous', props.id, 'prev');
+    } else if (key === 'ArrowDown' && horizontal) {
+      emit('highlight-menu-item', 'down', props.id);
+    } else if (key === 'ArrowUp' && horizontal) {
+      emit('highlight-menu-item', 'up', props.id);
+    }
+  };
+
+  onMounted(computeMenuStyle);
+  onBeforeUnmount(() => clearTimeout(styleTimer));
 </script>
 
-<style lang="scss" src="./MenuBarItem.scss" scoped></style>
+<style lang="scss" scoped>
+  .menu-bar-item-container {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &:focus {
+      outline: 0;
+    }
+
+    &:focus-visible {
+      outline: 1px solid #0080ff;
+    }
+
+    &.left,
+    &.right {
+      padding: 0.5rem 0;
+      width: 100%;
+    }
+
+    &.top,
+    &.bottom {
+      height: 100%;
+      padding: 0 0.75rem;
+    }
+  }
+
+  .menu-container {
+    position: absolute;
+    z-index: 9999;
+  }
+
+  .name-container {
+    font-size: 0.95rem;
+    margin: 0.25rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+    white-space: nowrap;
+
+    &.left,
+    &.right {
+      align-items: center;
+      background: none;
+      display: flex;
+      font-size: 1rem;
+      height: 1.5rem;
+      justify-content: flex-start;
+      width: 100%;
+
+      &.expanded {
+        padding-left: 1rem;
+      }
+
+      &:not(.expanded) {
+        font-size: 1.1rem;
+        justify-content: center;
+        text-transform: uppercase;
+        width: 2rem;
+      }
+    }
+  }
+</style>

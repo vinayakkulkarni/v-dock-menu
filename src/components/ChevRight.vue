@@ -9,16 +9,8 @@
     stroke-width="2"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="feather feather-chevron-right"
+    aria-hidden="true"
   >
     <polyline points="9 18 15 12 9 6" />
   </svg>
 </template>
-
-<script lang="ts">
-  import { defineComponent } from '@vue/composition-api';
-
-  export default defineComponent({
-    name: 'ChevRightIcon',
-  });
-</script>

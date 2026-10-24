@@ -106,3 +106,9 @@ dist
 
 # Static storybook
 static/storybook
+
+# Nuxt / Cloudflare
+.output
+.wrangler
+.data
+.dev.vars

@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Fonts (self-hosted, same families as nxui.geoql.in) ─────────── */
+
+@font-face {
+  font-family: 'Clash Display';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/clash-display-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/satoshi-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Satoshi';
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/satoshi-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400.woff2') format('woff2');
+}
+
+/* ── Tokens ──────────────────────────────────────────────────────────
+ * Paper and ink with one accent: a harbour teal, the colour of a lit
+ * dock lamp. Accent marks the active edge, focus and the live dock
+ * readout — never body text. The menu bar itself is a dark slab in both
+ * modes so it reads as the tool, not the page.
+ */
+
+:root {
+  color-scheme: light;
+  --paper: oklch(0.975 0.005 95);
+  --paper-2: oklch(0.948 0.007 95);
+  --ink: oklch(0.21 0.016 255);
+  --ink-2: oklch(0.42 0.016 255);
+  --ink-3: oklch(0.52 0.014 255);
+  --rule: oklch(0.87 0.008 95);
+  --accent: oklch(0.68 0.11 205);
+  --accent-ink: oklch(0.48 0.09 210);
+  --bar: oklch(0.24 0.018 255);
+  --bar-2: oklch(0.3 0.02 255);
+  --bar-3: oklch(0.38 0.024 255);
+  --bar-ink: oklch(0.95 0.006 95);
+}
+
+.dark {
+  color-scheme: dark;
+  --paper: oklch(0.17 0.012 255);
+  --paper-2: oklch(0.21 0.014 255);
+  --ink: oklch(0.95 0.006 95);
+  --ink-2: oklch(0.78 0.01 95);
+  --ink-3: oklch(0.66 0.014 255);
+  --rule: oklch(0.32 0.014 255);
+  --accent: oklch(0.78 0.11 200);
+  --accent-ink: oklch(0.84 0.09 200);
+  --bar: oklch(0.12 0.012 255);
+  --bar-2: oklch(0.22 0.016 255);
+  --bar-3: oklch(0.3 0.02 255);
+  --bar-ink: oklch(0.95 0.006 95);
+}
+
+@theme {
+  --text-heading: clamp(1.75rem, 4vw, 2.75rem);
+  --text-heading--line-height: 1.05;
+  --text-edge: clamp(4.5rem, 11vw, 9.5rem);
+  --text-edge--line-height: 0.8;
+  --text-code: 0.8125rem;
+  --container-measure: 48ch;
+  --container-headline: 18ch;
+  --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Clash Display', 'Satoshi', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-bar: var(--bar);
+}
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-feature-settings: 'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+}
+
+/* The menubar font follows the page. */
+.menu-bar-container {
+  font-family: var(--font-sans);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
