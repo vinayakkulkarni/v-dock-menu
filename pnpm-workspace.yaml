@@ -1,0 +1,36 @@
+packages:
+  - 'demo'
+
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  sharp: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@nuxt/*'
+  - '@nuxtjs/*'
+  - nuxt
+  - '@vue/*'
+  - vue
+  - vue-tsc
+  - wrangler
+  - workerd
+  - miniflare
+  - '@cloudflare/*'
+  - '@types/*'
+  - '@typescript/*'
+  - typescript
+  - '@commitlint/*'
+  - vite-plus
+  - '@voidzero-dev/*'
+  - '@oxlint/*'
+  - '@oxfmt/*'
+  - oxlint
+  - oxfmt
+  - unplugin-vue
+  - '@tsdown/*'
+  - happy-dom
+  - sass
+  - lint-staged
+  - tsdown@0.23.2

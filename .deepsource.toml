@@ -4,8 +4,8 @@ version = 1
 name = "javascript"
 enabled = true
 
-  [analyzers.meta]
-  environment = ["browser"]
-  plugins = ["vue"]
-  style_guide = "standard"
-  dialect = "typescript"
+[analyzers.meta]
+environment = ["browser"]
+plugins = ["vue"]
+style_guide = "standard"
+dialect = "typescript"
