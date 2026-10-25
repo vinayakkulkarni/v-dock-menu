@@ -38,7 +38,7 @@ export default defineNuxtConfig({
   // gtagId skips GA4 entirely (no measurement ID is issued yet).
   runtimeConfig: {
     public: {
-      gtagId: '',
+      gtagId: 'G-RRCQTBD9K1',
       plausibleScriptId: 'pa-LyLwMXBJ8gAwL9GT2YlEm',
       plausibleApiHost: 'https://analytics.geoql.in',
       openpanelClientId: '7f647ccc-b0d5-4a49-8f49-c74f307ae056',
