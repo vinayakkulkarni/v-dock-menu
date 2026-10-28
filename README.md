@@ -13,7 +13,8 @@
 </div>
 
 <p>
-  <a href="https://v-dock-menu.vinayakkulkarni.dev"><strong>Live demo →</strong></a>
+  <a href="https://v-dock-menu.vinayakkulkarni.dev?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu"><strong>Live demo →</strong></a>
+  · <a href="https://www.npmjs.com/package/v-dock-menu">npm</a>
 </p>
 
 <h2>Features</h2>
@@ -41,6 +42,7 @@
 - [📦 Build Setup](#-build-setup)
 - [🔨 Contributing](#-contributing)
 - [📜 Notes](#-notes)
+- [More from the author](#more-from-the-author)
 - [Meta](#meta)
 
 ## ⚡ Installation
@@ -210,6 +212,17 @@ pnpm run deploy      # deploy the demo to Cloudflare Workers
 ## 📜 Notes
 
 This is a fork of the original [vue-dock-menu](https://github.com/prabhuignoto/vue-dock-menu) by [prabhuignoto](https://github.com/prabhuignoto) which supports Vue 2. This version targets Vue 3.
+
+## More from the author
+
+- [v-tweakpane](https://v-tweakpane.vinayakkulkarni.dev?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — Vue 3 wrapper for Tweakpane GUI panels
+- [v-spotlight](https://v-spotlight.vinayakkulkarni.dev?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — Vue 3 spotlight overlay for product tours
+- [v-github-icon](https://v-github-icon.vinayakkulkarni.dev?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — GitHub Octicons as Vue 3 components
+- [v-image](https://v-image.vinayakkulkarni.dev?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — Vue 3 file input with image preview
+- [nxui](https://nxui.geoql.in?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — animated copy-paste UI components for Vue 3 and Nuxt
+- [shadscan-vue](https://shadscan-vue.geoql.in?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) — UI-fundamentals audit for shadcn-vue apps
+
+See every project at [vinayakkulkarni.dev/projects](https://vinayakkulkarni.dev/projects?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu) and [geoql.in](https://geoql.in?utm_source=github&utm_medium=readme&utm_campaign=v-dock-menu).
 
 ## Meta
 
